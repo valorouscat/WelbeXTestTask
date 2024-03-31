@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: postgresql-db
+    restart: always
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: docker_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  app:
+    container_name: fastapi-application
+    build: .
+    command: python3 main.py
+    volumes:
+      - .:/app  
+      - ./logs:/app/logs
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:secret@db:5432/docker_db
+    ports: 
+      - "8000:8000"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,6 @@
+/.devcontainer
+/.github
+/.venv
+/logs
+/logs.log
+/__pycache__
